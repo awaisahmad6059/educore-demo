@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Admin Dashboard - EduCore</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div><h1>Dashboard</h1><div class="sub" id="welcome">Welcome back, Admin — here's your school at a glance.</div></div>
+      <div class="user-chip" id="userchip"></div>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><div class="k-ico" style="background:rgba(45,91,227,.12)">🎓</div><div class="k-num">842</div><div class="k-lbl">Total Students</div><div class="k-delta up">▲ 4.2% this term</div></div>
+      <div class="kpi"><div class="k-ico" style="background:rgba(22,163,74,.12)">✅</div><div class="k-num">719</div><div class="k-lbl">Present Today</div><div class="k-delta up">85.4% present</div></div>
+      <div class="kpi"><div class="k-ico" style="background:rgba(217,119,6,.12)">💰</div><div class="k-num">$95K</div><div class="k-lbl">Fees Overdue</div><div class="k-delta down">18% pending</div></div>
+      <div class="kpi"><div class="k-ico" style="background:rgba(220,38,38,.12)">📝</div><div class="k-num">3</div><div class="k-lbl">Pending Results</div><div class="k-delta down">Need review</div></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Attendance Trend <span class="badge blue">Last 30 days</span></h3>
+        <div class="bars">
+          <div><div class="bar" style="height:70%">1</div><div class="bar-label">8/1</div></div>
+          <div><div class="bar" style="height:62%">2</div><div class="bar-label">8/8</div></div>
+          <div><div class="bar" style="height:78%">3</div><div class="bar-label">8/15</div></div>
+          <div><div class="bar" style="height:55%">4</div><div class="bar-label">8/22</div></div>
+          <div><div class="bar" style="height:85%">5</div><div class="bar-label">8/29</div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Fee Collection</h3>
+        <div class="donut" style="background:conic-gradient(#16A34A 0 76%, #D97706 76% 94%, #DC2626 94% 100%);">
+          <div class="donut-center"><b>76%</b><span>Paid</span></div>
+        </div>
+        <div class="legend">
+          <div class="legend-item"><span class="legend-swatch" style="background:#16A34A"></span>Paid<b>76%</b></div>
+          <div class="legend-item"><span class="legend-swatch" style="background:#D97706"></span>Pending<b>18%</b></div>
+          <div class="legend-item"><span class="legend-swatch" style="background:#DC2626"></span>Overdue<b>6%</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="panel">
+        <h3>Result Distribution</h3>
+        <div class="bars" style="height:130px;">
+          <div><div class="bar" style="height:100%;background:linear-gradient(180deg,#16A34A,#0f7a36)">A+</div></div>
+          <div><div class="bar" style="height:85%;background:linear-gradient(180deg,#16A34A,#0f7a36)">A</div></div>
+          <div><div class="bar" style="height:60%">B</div></div>
+          <div><div class="bar" style="height:35%;background:linear-gradient(180deg,#D97706,#a85a05)">C</div></div>
+          <div><div class="bar" style="height:15%;background:linear-gradient(180deg,#DC2626,#a81a1a)">F</div></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--slate)"><span>A+</span><span>A</span><span>B</span><span>C</span><span>F</span></div>
+      </div>
+      <div class="panel">
+        <h3>Class Strength</h3>
+        <table class="tbl">
+          <tr><td>Grade 1</td><td style="text-align:right"><b>42</b></td></tr>
+          <tr><td>Grade 5</td><td style="text-align:right"><b>38</b></td></tr>
+          <tr><td>Grade 8</td><td style="text-align:right"><b>35</b></td></tr>
+          <tr><td>Grade 10</td><td style="text-align:right"><b>30</b></td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <h3>Quick Actions</h3>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <button class="btn btn-primary" onclick="window.location.href='admin-students.html'">+ Add Student</button>
+          <button class="btn btn-outline" onclick="window.location.href='admin-teachers.html'">+ Add Teacher</button>
+          <button class="btn btn-outline" onclick="window.location.href='admin-fees.html'">Record Payment</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Pending Fee Payments <span class="badge amber">Overdue alert</span></h3>
+      <table class="tbl">
+        <tr><th>Student</th><th>Class</th><th>Amount</th><th>Due Date</th><th>Status</th><th>Action</th></tr>
+        <tr id="feeRow1"><td>Ahmed Raza</td><td>Grade 8</td><td>$250</td><td>Aug 15</td><td><span class="badge red">Overdue</span></td><td><button class="btn btn-primary btn-sm" onclick="window.location.href='admin-fees.html'">Collect</button></td></tr>
+        <tr><td>Fatima Noor</td><td>Grade 5</td><td>$120</td><td>Aug 30</td><td><span class="badge amber">Pending</span></td><td><button class="btn btn-outline btn-sm" onclick="window.location.href='admin-fees.html'">Collect</button></td></tr>
+        <tr><td>Hamza Ali</td><td>Grade 10</td><td>$180</td><td>Sep 01</td><td><span class="badge amber">Pending</span></td><td><button class="btn btn-outline btn-sm" onclick="window.location.href='admin-fees.html'">Collect</button></td></tr>
+        <tr><td>Zainab Bibi</td><td>Grade 3</td><td>$90</td><td>Sep 02</td><td><span class="badge amber">Pending</span></td><td><button class="btn btn-outline btn-sm" onclick="window.location.href='admin-fees.html'">Collect</button></td></tr>
+      </table>
+    </div>
+  </main>
+</div>
+<div class="msg" id="msg"></div>
+<script src="app.js"></script>
+<script>
+(function(){
+  var u=guard('admin'); if(!u) return;
+  document.getElementById('sidebar').innerHTML=buildSidebar('Dashboard','admin');
+  document.getElementById('userchip').innerHTML='<div class="ava">'+letterAvatar(u.email)+'</div><div><b>'+u.email+'</b><span>Admin</span></div>';
+  document.getElementById('welcome').textContent='Welcome back, '+u.email+' — here\'s your school at a glance.';
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Student Dashboard - EduCore</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar"></aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div><h1>Student Dashboard</h1><div class="sub">Welcome back, Ahmed Raza — Grade 8-A</div></div>
+      <div class="user-chip" id="userchip"><div class="ava">A</div><div><b>Ahmed Raza</b><span>Grade 8-A</span></div></div>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><div class="k-ico" style="background:rgba(22,163,74,.12)">📅</div><div class="k-num">92%</div><div class="k-lbl">Attendance</div><div class="k-delta up">▲ Above target</div></div>
+      <div class="kpi"><div class="k-ico" style="background:rgba(45,91,227,.12)">📝</div><div class="k-num">A</div><div class="k-lbl">Last Grade</div><div class="k-delta up">Midterm</div></div>
+      <div class="kpi"><div class="k-ico" style="background:rgba(217,119,6,.12)">📚</div><div class="k-num">2</div><div class="k-lbl">Active Assignments</div><div class="k-delta down">1 due soon</div></div>
+      <div class="kpi"><div class="k-ico" style="background:rgba(45,91,227,.12)">💰</div><div class="k-num">$0</div><div class="k-lbl">Fees Outstanding</div><div class="k-delta up">All paid</div></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="panel">
+        <h3>My Attendance <span class="badge green">August 2026</span></h3>
+        <div class="att-grid">
+          <div class="att-cell present">1</div><div class="att-cell present">2</div><div class="att-cell present">3</div>
+          <div class="att-cell present">4</div><div class="att-cell present">5</div><div class="att-cell absent">6</div>
+          <div class="att-cell present">7</div><div class="att-cell present">8</div><div class="att-cell present">9</div>
+          <div class="att-cell late">10</div><div class="att-cell present">11</div><div class="att-cell present">12</div>
+          <div class="att-cell present">13</div><div class="att-cell absent">14</div><div class="att-cell present">15</div>
+          <div class="att-cell present">16</div><div class="att-cell present">17</div><div class="att-cell present">18</div>
+          <div class="att-cell present">19</div><div class="att-cell present">20</div><div class="att-cell present">21</div>
+          <div class="att-cell present">22</div><div class="att-cell late">23</div><div class="att-cell present">24</div>
+          <div class="att-cell present">25</div><div class="att-cell present">26</div><div class="att-cell present">27</div>
+          <div class="att-cell present">28</div><div class="att-cell present">29</div><div class="att-cell present">30</div>
+        </div>
+        <div style="display:flex;gap:18px;margin-top:16px;font-size:13px;color:var(--slate);flex-wrap:wrap;">
+          <span><span style="display:inline-block;width:12px;height:12px;background:var(--success);border-radius:3px;margin-right:6px"></span>Present</span>
+          <span><span style="display:inline-block;width:12px;height:12px;background:var(--danger);border-radius:3px;margin-right:6px"></span>Absent</span>
+          <span><span style="display:inline-block;width:12px;height:12px;background:var(--warning);border-radius:3px;margin-right:6px"></span>Late</span>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Recent Assignments</h3>
+        <div class="assign-card">
+          <div class="file-ico">📄</div>
+          <div class="assign-info"><b>Algebra HW #4</b><span>Mathematics · Due Aug 30</span></div>
+          <span class="badge green">Active</span>
+        </div>
+        <div class="assign-card">
+          <div class="file-ico">📄</div>
+          <div class="assign-info"><b>Geometry Practice</b><span>Mathematics · Due Sep 02</span></div>
+          <span class="badge amber">Due soon</span>
+        </div>
+        <br/>
+        <h3>Result Summary</h3>
+        <table class="tbl">
+          <tr><td>Midterm Math</td><td style="text-align:right"><span class="badge green">A · 88%</span></td></tr>
+          <tr><td>Algebra Quiz</td><td style="text-align:right"><span class="badge blue">B · 76%</span></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="panel">
+        <h3>My Results</h3>
+        <table class="tbl">
+          <tr><th>Subject</th><th>Marks</th><th>Total</th><th>Grade</th><th>Remarks</th></tr>
+          <tr><td>Mathematics</td><td>88</td><td>100</td><td><span class="badge green">A</span></td><td>Excellent</td></tr>
+          <tr><td>English</td><td>76</td><td>100</td><td><span class="badge blue">B</span></td><td>Good</td></tr>
+          <tr><td>Science</td><td>81</td><td>100</td><td><span class="badge green">A</span></td><td>Great</td></tr>
+          <tr><td>Urdu</td><td>70</td><td>100</td><td><span class="badge blue">B</span></td><td>Keep going</td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <h3>Fee Status</h3>
+        <div class="kpis" style="grid-template-columns:1fr 1fr;margin-bottom:18px;">
+          <div class="kpi" style="padding:16px;"><div class="k-num" style="font-size:22px;">$240</div><div class="k-lbl">Total Due</div></div>
+          <div class="kpi" style="padding:16px;"><div class="k-num" style="font-size:22px;color:var(--success)">$240</div><div class="k-lbl">Total Paid</div></div>
+        </div>
+        <table class="tbl">
+          <tr><th>Month</th><th>Amount</th><th>Status</th></tr>
+          <tr><td>June 2026</td><td>$120</td><td><span class="badge green">Paid</span></td></tr>
+          <tr><td>July 2026</td><td>$120</td><td><span class="badge green">Paid</span></td></tr>
+          <tr><td>August 2026</td><td>$120</td><td><span class="badge green">Paid</span></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Notifications</h3>
+      <table class="tbl">
+        <tr><th>Type</th><th>Message</th><th>Status</th></tr>
+        <tr><td><span class="badge blue">Result</span></td><td>Midterm results are now available</td><td><span class="badge green">Read</span></td></tr>
+        <tr><td><span class="badge amber">Assignment</span></td><td>New assignment in Mathematics</td><td><span class="badge green">Read</span></td></tr>
+        <tr><td><span class="badge blue">Exam</span></td><td>Algebra Midterm scheduled Sep 02</td><td><span class="badge red">Unread</span></td></tr>
+      </table>
+      <br/><a href="login.html" class="btn btn-outline" style="margin-top:10px;">← Back to Login</a>
+    </div>
+  </main>
+</div>
+<div class="msg" id="msg"></div>
+<script src="app.js"></script>
+<script>
+(function(){
+  var u=guard('student'); if(!u) return;
+  document.getElementById('sidebar').innerHTML=buildSidebar('Dashboard','student');
+  var cu=getCurrentUser();
+  document.getElementById('userchip').innerHTML='<div class="ava">'+letterAvatar((cu&&cu.name)||u.email)+'</div><div><b>'+esc((cu&&cu.name)||u.email)+'</b><span>'+esc(u.email)+'</span></div>';
+})();
+</script>
+</body>
+</html>

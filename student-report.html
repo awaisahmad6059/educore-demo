@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Report Card - EduCore Student</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div><h1>Report Card</h1><div class="sub">Your official midterm report card — downloadable as PDF.</div></div>
+      <div class="user-chip" id="userchip"></div>
+    </div>
+    <div class="panel">
+      <div style="text-align:center;border-bottom:1px solid var(--cloud);padding-bottom:16px;margin-bottom:16px">
+        <div style="font-size:20px;font-weight:800;color:var(--primary-dark)">EduCore International School</div>
+        <div style="color:var(--slate);font-size:13px">Midterm Report Card · Academic Year 2026-2027</div>
+      </div>
+      <div class="grid-2" style="margin-bottom:12px">
+        <div><b>Student:</b> Ahmed Raza</div>
+        <div><b>Roll No:</b> R-101</div>
+        <div><b>Class:</b> Grade 8-A</div>
+        <div><b>Section:</b> A</div>
+      </div>
+      <table class="tbl">
+        <thead><tr><th>Subject</th><th>Marks</th><th>Grade</th><th>Remarks</th></tr></thead>
+        <tbody>
+          <tr><td>Mathematics</td><td>88</td><td>A</td><td>Excellent</td></tr>
+          <tr><td>English</td><td>79</td><td>B+</td><td>Good</td></tr>
+          <tr><td>Science</td><td>91</td><td>A+</td><td>Outstanding</td></tr>
+          <tr><td>Urdu</td><td>84</td><td>A</td><td>Excellent</td></tr>
+        </tbody>
+      </table>
+      <div style="display:flex;justify-content:space-between;margin-top:16px;font-weight:600">
+        <div>Total: 342 / 400</div><div>Percentage: 85.5%</div><div>Grade: A</div><div>Rank: #3</div>
+      </div>
+      <div class="form-actions" style="margin-top:20px">
+        <button class="btn btn-primary" onclick="showMsg('PDF download real system mein hota hai (Puppeteer/seam se). Demo me preview hi hai.')">Download PDF</button>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="msg" id="msg"></div>
+<script src="app.js"></script>
+<script>
+(function(){ var u=guard('student'); if(!u) return; document.getElementById('sidebar').innerHTML=buildSidebar('Report Card','student'); document.getElementById('userchip').innerHTML='<div class="ava">'+letterAvatar(u.email)+'</div><div><b>'+u.email+'</b><span>Student</span></div>'; })();
+</script>
+</body>
+</html>

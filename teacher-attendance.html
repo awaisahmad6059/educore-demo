@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Mark Attendance - EduCore Teacher</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div><h1>Mark Attendance</h1><div class="sub">Select a class and mark each student Present / Absent / Late for today.</div></div>
+      <div class="user-chip" id="userchip"></div>
+    </div>
+    <div class="panel">
+      <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:6px">
+        <div class="form-row" style="margin:0"><label style="margin-bottom:4px">Class</label>
+          <select id="cls" onchange="loadStudents()"><option>Grade 8-A</option><option>Grade 9-B</option><option>Grade 10-A</option><option>Grade 5-B</option></select>
+        </div>
+        <div class="form-row" style="margin:0"><label style="margin-bottom:4px">Date</label><input type="date" id="date" value="2026-08-29"/></div>
+        <button class="btn btn-outline" onclick="markAll('present')" style="margin-top:18px">All Present</button>
+        <button class="btn btn-outline" onclick="markAll('absent')" style="margin-top:18px">All Absent</button>
+        <button class="btn btn-primary" onclick="saveAttendance()" style="margin-top:18px">Save Attendance</button>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Students — <span id="clsLabel">Grade 8-A</span> (<span id="cntLabel">0</span> students)</h3>
+      <table class="tbl">
+        <thead><tr><th>Roll</th><th>Student</th><th>Status</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div style="margin-top:14px;display:flex;gap:8px">
+        <span class="badge green">Present</span>
+        <span class="badge red">Absent</span>
+        <span class="badge amber">Late</span>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="msg" id="msg"></div>
+<script src="app.js"></script>
+<script>
+var attSess=[];
+(function(){
+  var u=guard('teacher'); if(!u) return;
+  document.getElementById('sidebar').innerHTML=buildSidebar('Mark Attendance','teacher');
+  document.getElementById('userchip').innerHTML='<div class="ava">'+letterAvatar(u.email)+'</div><div><b>'+u.email+'</b><span>Teacher</span></div>';
+  loadStudents();
+})();
+function loadStudents(){
+  var cls=document.getElementById('cls').value;
+  document.getElementById('clsLabel').textContent=cls;
+  var s=loadStore().students.filter(function(x){return x.class===cls;});
+  if(!s.length){ s=[{roll:'—',name:'No students assigned'},{roll:'—',name:'Add students in Admin > Students'}]; }
+  document.getElementById('cntLabel').textContent=s.length;
+  attSess=s.map(function(x){return {roll:x.roll,name:x.name,status:'present'};});
+  render();
+}
+function render(){
+  document.getElementById('tbody').innerHTML=attSess.map(function(x){
+    if(x.roll==='—') return '<tr><td colspan="3" style="color:var(--slate)">'+x.name+'</td></tr>';
+    return '<tr><td>'+x.roll+'</td><td><b>'+x.name+'</b></td><td>'+
+    '<button class="btn btn-sm '+(x.status==='present'?'btn-primary':'btn-outline')+'" onclick="setSt(this,0,\''+x.roll+'\')">P</button> '+
+    '<button class="btn btn-sm '+(x.status==='absent'?'btn-primary':'btn-outline')+'" onclick="setSt(this,1,\''+x.roll+'\')">A</button> '+
+    '<button class="btn btn-sm '+(x.status==='late'?'btn-primary':'btn-outline')+'" onclick="setSt(this,2,\''+x.roll+'\')">L</button></td></tr>';
+  }).join('');
+}
+function setSt(btn,idx,roll){
+  var sts=['present','absent','late'];
+  attSess=attSess.map(function(x){ if(x.roll===roll) x.status=sts[idx]; return x; });
+  render();
+}
+function markAll(v){ attSess.forEach(function(x){ if(x.roll!=='—') x.status=v; }); render(); }
+function saveAttendance(){
+  var marked=attSess.filter(function(x){return x.roll!=='—';});
+  var p=marked.filter(function(x){return x.status==='present';}).length;
+  var s=loadStore();
+  s.attendanceLog=s.attendanceLog||[];
+  s.attendanceLog.push({class:document.getElementById('cls').value,date:document.getElementById('date').value,present:p,total:marked.length,by:'teacher'});
+  saveStore(s);
+  showMsg('Attendance saved! '+p+'/'+marked.length+' present ✔');
+}
+</script>
+</body>
+</html>

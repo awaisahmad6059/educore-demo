@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Students - EduCore Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div><h1>Students</h1><div class="sub">Student admissions aur profiles manage karein. Har student ko login email + password diya jata hai.</div></div>
+      <div class="user-chip" id="userchip"></div>
+    </div>
+    <div class="toolbar">
+      <input class="search-input" id="search" placeholder="Search by name or roll no..." oninput="renderTable()"/>
+      <div class="chip" id="fActive" onclick="setFilter('active')">Active</div>
+      <div class="chip" id="fAll" onclick="setFilter('all')" style="border-color:var(--primary);color:var(--primary)">All</div>
+      <button class="btn btn-primary" onclick="openAdd()">+ Add Student</button>
+    </div>
+    <div class="panel">
+      <table class="tbl">
+        <thead><tr><th>Roll</th><th>Name / Login</th><th>Class</th><th>Guardian</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="stuBody"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <div class="modal-head"><h3 id="stuModalTitle">New Student Admission</h3><button class="close-x" onclick="closeModal('addModal')">✕</button></div>
+    <div class="stepper">
+      <div class="step active" id="st1"><span class="num">1</span>Personal</div>
+      <div class="step" id="st2"><span class="num">2</span>Contact</div>
+      <div class="step" id="st3"><span class="num">3</span>Academic</div>
+      <div class="step" id="st4"><span class="num">4</span>Guardian</div>
+    </div>
+    <div id="ps1">
+      <div class="form-row"><label>Full Name</label><input id="f_name" placeholder="e.g. Ahmed Raza"/></div>
+      <div class="form-grid">
+        <div class="form-row"><label>Date of Birth</label><input id="f_dob" type="date"/></div>
+        <div class="form-row"><label>Gender</label><select id="f_gender"><option>Male</option><option>Female</option><option>Other</option></select></div>
+      </div>
+      <div class="form-grid">
+        <div class="form-row"><label>Blood Group</label><input id="f_blood" placeholder="B+"/></div>
+        <div class="form-row"><label>CNIC / B-Form</label><input id="f_cnic" placeholder="B-Form No"/></div>
+      </div>
+    </div>
+    <div id="ps2" style="display:none">
+      <div class="form-row"><label>Phone</label><input id="f_phone" placeholder="03xx-xxxxxxx"/></div>
+      <div class="form-grid">
+        <div class="form-row"><label>Email (login ID)</label><input id="f_email" placeholder="student@school.com"/></div>
+        <div class="form-row"><label>Password (default)</label><input id="f_pass" value="student123"/><div style="font-size:11px;color:var(--slate);margin-top:4px">Student isi se login karega, bad mein change kar sakta hai.</div></div>
+      </div>
+      <div class="form-row"><label>Address</label><input id="f_addr" placeholder="Permanent address"/></div>
+      <div class="form-grid">
+        <div class="form-row"><label>City</label><input id="f_city"/></div>
+        <div class="form-row"><label>Emergency Contact</label><input id="f_ec"/></div>
+      </div>
+    </div>
+    <div id="ps3" style="display:none">
+      <div class="form-grid">
+        <div class="form-row"><label>Class</label><select id="f_class"><option>Grade 3-A</option><option>Grade 5-B</option><option>Grade 8-A</option><option>Grade 9-B</option><option>Grade 10-A</option></select></div>
+        <div class="form-row"><label>Admission Date</label><input id="f_adate" type="date" value="2026-08-29"/></div>
+      </div>
+      <div class="form-row"><label>Previous School</label><input id="f_prev" placeholder="Optional"/></div>
+    </div>
+    <div id="ps4" style="display:none">
+      <div class="form-grid">
+        <div class="form-row"><label>Guardian Name</label><input id="f_gname" placeholder="Father / Mother / Guardian"/></div>
+        <div class="form-row"><label>Relation</label><select id="f_gr"><option>Father</option><option>Mother</option><option>Guardian</option></select></div>
+      </div>
+      <div class="form-grid">
+        <div class="form-row"><label>Guardian Phone</label><input id="f_gphone"/></div>
+        <div class="form-row"><label>Guardian CNIC</label><input id="f_gcnic"/></div>
+      </div>
+      <div class="form-row"><label>Guardian Email</label><input id="f_gemail"/></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-outline" id="backBtn" style="display:none" onclick="stepBack()">Back</button>
+      <button class="btn btn-primary" id="nextBtn" onclick="stepNext()">Next</button>
+    </div>
+  </div>
+</div>
+
+<div class="msg" id="msg"></div>
+<script src="app.js"></script>
+<script>
+var step=1, filter='all';
+(function(){
+  var u=guard(['admin','superadmin']); if(!u) return;
+  document.getElementById('sidebar').innerHTML=buildSidebar('Students','admin');
+  document.getElementById('userchip').innerHTML='<div class="ava">'+letterAvatar(u.email)+'</div><div><b>'+u.email+'</b><span>'+roleLabel(u.role)+'</span></div>';
+  renderTable();
+})();
+function getStudents(){ return loadStore().students; }
+function renderTable(){
+  var q=document.getElementById('search').value.toLowerCase();
+  var list=getStudents().filter(function(s){
+    var mf=(filter==='all'||s.status===filter);
+    return mf && (s.name.toLowerCase().includes(q)||s.roll.toLowerCase().includes(q));
+  });
+  var html='';
+  if(!list.length){ html='<tr><td colspan="6" style="text-align:center;color:var(--slate);padding:30px">Koi student nahi mila.</td></tr>'; }
+  list.forEach(function(s){
+    var u=getUsers().find(function(y){ return y.studentId===s.id; });
+    var login=u?u.email+' / '+u.pass:'-';
+    html+='<tr><td>'+s.roll+'</td><td><b>'+esc(s.name)+'</b><br/><span style="color:var(--slate);font-size:11px">'+login+'</span></td><td>'+esc(s.class)+'</td><td>'+esc(s.guardian)+'</td><td><span class="badge '+(s.status==='active'?'green':'gray')+'">'+esc(s.status)+'</span></td>'+
+    '<td><button class="btn btn-sm btn-outline" onclick="viewStudent('+s.id+')">Profile</button> '+
+    '<button class="btn btn-sm btn-outline" onclick="resetPass('+s.id+')">Reset Pass</button> '+
+    '<button class="btn btn-sm '+(s.status==='active'?'btn-dark':'btn-primary')+'" onclick="toggleStatus('+s.id+')">'+(s.status==='active'?'Deactivate':'Activate')+'</button></td></tr>';
+  });
+  document.getElementById('stuBody').innerHTML=html;
+}
+function setFilter(f){ filter=f; document.getElementById('fActive').style.borderColor=(f==='active'?'var(--primary)':''); document.getElementById('fActive').style.color=(f==='active'?'var(--primary)':''); document.getElementById('fAll').style.borderColor=(f==='all'?'var(--primary)':''); document.getElementById('fAll').style.color=(f==='all'?'var(--primary)':''); renderTable(); }
+function toggleStatus(id){
+  var s=loadStore(); s.students.forEach(function(x){ if(x.id===id){ x.status=(x.status==='active'?'inactive':'active'); } }); saveStore(s);
+  showMsg('Student status updated.'); renderTable();
+}
+function resetPass(id){
+  var s=loadStore(); var st=s.students.find(function(x){return x.id===id;});
+  var nu=prompt('Naya password set karein for '+st.name+':'); if(!nu) return;
+  var u=s.users.find(function(y){ return y.studentId===id; });
+  if(u){ u.pass=nu; saveStore(s); showMsg('Password reset for '+st.name); renderTable(); }
+  else showMsg('Is student ka koi login account nahi bana.');
+}
+function openAdd(){
+  step=1;
+  document.getElementById('stuModalTitle').textContent='New Student Admission';
+  document.querySelector('#addModal .stepper').style.display='flex';
+  showStep();
+  document.getElementById('f_email').value=''; document.getElementById('f_pass').value='student123';
+  openModal('addModal');
+}
+function viewStudent(id){
+  var s=getStudents().find(function(x){return x.id===id;});
+  if(!s) return;
+  var u=getUsers().find(function(y){ return y.studentId===s.id; });
+  document.getElementById('stuModalTitle').textContent='Student Profile: '+s.name;
+  document.querySelector('#addModal .stepper').style.display='none';
+  document.getElementById('ps1').innerHTML=
+    '<div class="form-grid">'+
+      '<div class="form-row"><label>Roll No</label><input value="'+esc(s.roll)+'" disabled/></div>'+
+      '<div class="form-row"><label>Name</label><input value="'+esc(s.name)+'" disabled/></div>'+
+    '</div>'+
+    '<div class="form-grid">'+
+      '<div class="form-row"><label>Class</label><input value="'+esc(s.class)+'" disabled/></div>'+
+      '<div class="form-row"><label>Status</label><input value="'+esc(s.status)+'" disabled/></div>'+
+    '</div>'+
+    '<div class="form-row"><label>Guardian</label><input value="'+esc(s.guardian||'')+'" disabled/></div>'+
+    '<div class="form-row"><label>Login Email</label><input value="'+(u?esc(u.email):'-')+'" disabled/></div>'+
+    '<div class="form-row"><label>Login Password</label><input value="'+(u?esc(u.pass):'-')+'" disabled/>'+
+    '<div style="font-size:11px;color:var(--slate);margin-top:4px">Admin isi email/password se login deta hai. Reset Pass button se change kar sakta hai.</div></div>';
+  document.getElementById('ps2').style.display='none';
+  document.getElementById('ps3').style.display='none';
+  document.getElementById('ps4').style.display='none';
+  document.getElementById('nextBtn').style.display='none';
+  document.getElementById('backBtn').textContent='Close'; document.getElementById('backBtn').style.display='inline-flex';
+  document.getElementById('backBtn').onclick=function(){ closeModal('addModal'); };
+}
+function stepNext(){ step++; showStep(); }
+function stepBack(){ step--; showStep(); }
+function showStep(){
+  var s=['ps1','ps2','ps3','ps4'];
+  for(var i=0;i<4;i++){ document.getElementById(s[i]).style.display=(i===step-1)?'':'none'; }
+  document.getElementById('st1').className='step '+(step>1?'done':step===1?'active':'');
+  document.getElementById('st2').className='step '+(step>2?'done':step===2?'active':'');
+  document.getElementById('st3').className='step '+(step>3?'done':step===3?'active':'');
+  document.getElementById('st4').className='step '+(step===4?'active':'');
+  document.getElementById('backBtn').style.display=step>1?'inline-flex':'none';
+  document.getElementById('nextBtn').style.display='inline-flex';
+  document.getElementById('nextBtn').textContent=step===4?'Save Student':'Next';
+  if(step===4){ document.getElementById('nextBtn').onclick=saveStudent; }
+  else { document.getElementById('nextBtn').onclick=stepNext; }
+}
+function saveStudent(){
+  var name=document.getElementById('f_name').value.trim();
+  if(!name){ showMsg('Student ka naam lazmi hai.'); return; }
+  var em=document.getElementById('f_email').value.trim();
+  if(!em){ showMsg('Student ka email (login ID) lazmi hai.'); return; }
+  var s=loadStore();
+  var emExists=s.users.find(function(y){ return y.email.toLowerCase()===em.toLowerCase(); });
+  if(emExists){ showMsg('Yeh email already registered hai - alag email use karein.'); return; }
+  var cls=document.getElementById('f_class').value;
+  var newId=Math.max.apply(null, s.students.map(function(x){return x.id;}))+1;
+  var pass=document.getElementById('f_pass').value||'student123';
+  s.students.push({id:newId,roll:'R-1'+newId,name:name,class:cls,guardian:document.getElementById('f_gname').value||'-',status:'active',gender:document.getElementById('f_gender').value});
+  s.users.push({id:Math.max.apply(null,s.users.map(function(x){return x.id;}))+1,role:'student',name:name,email:em,pass:pass,active:true,studentId:newId});
+  saveStore(s);
+  showMsg('Student '+name+' add ho gaya. Login: '+em+' / '+pass);
+  closeModal('addModal');
+  openAdd(); renderTable();
+}
+</script>
+</body>
+</html>

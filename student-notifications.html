@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Notifications - EduCore Student</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div><h1>Notifications</h1><div class="sub">Updates from your teachers and the school admin.</div></div>
+      <div class="user-chip" id="userchip"></div>
+    </div>
+    <div class="panel" id="notifList"></div>
+  </main>
+</div>
+<div class="msg" id="msg"></div>
+<script src="app.js"></script>
+<script>
+(function(){
+  var u=guard('student'); if(!u) return;
+  document.getElementById('sidebar').innerHTML=buildSidebar('Notifications','student');
+  document.getElementById('userchip').innerHTML='<div class="ava">'+letterAvatar(u.email)+'</div><div><b>'+u.email+'</b><span>Student</span></div>';
+  var s=loadStore().notifications;
+  document.getElementById('notifList').innerHTML=s.map(function(n){
+    var cls={Result:'green',Assignment:'blue',Exam:'amber',Fee:'red'}[n.type]||'blue';
+    return '<div class="assign-card" style="margin-bottom:12px">'+
+      '<div class="file-ico">🔔</div>'+
+      '<div class="assign-info"><b>'+esc(n.title)+'</b><span>'+n.type+' · '+(n.read?'Read':'New')+'</span></div>'+
+      '<span class="badge '+(n.read?'gray':cls)+'">'+(n.read?'Read':'New')+'</span></div>';
+  }).join('');
+})();
+</script>
+</body>
+</html>

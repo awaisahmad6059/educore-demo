@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Subjects - EduCore Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div><h1>Subjects</h1><div class="sub">Subjects yahan add / edit / delete hote hain. Yeh teacher aur class assignment mein use hote hain.</div></div>
+      <div class="user-chip" id="userchip"></div>
+    </div>
+    <div class="toolbar">
+      <button class="btn btn-primary" onclick="openAdd()">+ Add Subject</button>
+    </div>
+    <div class="panel">
+      <h3>All Subjects</h3>
+      <table class="tbl">
+        <thead><tr><th>#</th><th>Subject Name</th><th>Code</th><th>Actions</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <button class="close-x" onclick="closeModal('addModal')">✕</button>
+    <h3 id="modalTitle">Add Subject</h3>
+    <div class="form-grid">
+      <div class="form-row"><label>Subject Name</label><input id="s_name" placeholder="e.g. Chemistry"/></div>
+      <div class="form-row"><label>Code</label><input id="s_code" placeholder="e.g. CHEM"/></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-outline" onclick="closeModal('addModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveSubject()">Save Subject</button>
+    </div>
+  </div>
+</div>
+<div class="msg" id="msg"></div>
+<script src="app.js"></script>
+<script>
+var editId=null;
+(function(){ var u=guard(['admin','superadmin']); if(!u) return; document.getElementById('sidebar').innerHTML=buildSidebar('Subjects','admin'); document.getElementById('userchip').innerHTML='<div class="ava">'+letterAvatar(u.email)+'</div><div><b>'+u.email+'</b><span>'+roleLabel(u.role)+'</span></div>'; render(); })();
+function render(){
+  var s=(loadStore().subjects)||[];
+  var h='';
+  if(!s.length) h='<tr><td colspan="4" style="text-align:center;color:var(--slate);padding:24px">Koi subject nahi — upar Add Subject dabayein.</td></tr>';
+  s.forEach(function(x){
+    h+='<tr><td>'+x.id+'</td><td><b>'+esc(x.name)+'</b></td><td>'+esc(x.code)+'</td>'+
+    '<td><button class="btn btn-sm btn-outline" onclick="editSubject('+x.id+')">Edit</button> '+
+    '<button class="btn btn-sm btn-outline" onclick="delSubject('+x.id+')">Delete</button></td></tr>';
+  });
+  document.getElementById('tbody').innerHTML=h;
+}
+function openAdd(){ editId=null; document.getElementById('modalTitle').textContent='Add Subject'; document.getElementById('s_name').value=''; document.getElementById('s_code').value=''; openModal('addModal'); }
+function editSubject(id){
+  var s=loadStore(); var x=s.subjects.find(function(y){return y.id===id;});
+  editId=id; document.getElementById('modalTitle').textContent='Edit Subject'; document.getElementById('s_name').value=x.name; document.getElementById('s_code').value=x.code; openModal('addModal');
+}
+function saveSubject(){
+  var n=document.getElementById('s_name').value.trim();
+  var c=document.getElementById('s_code').value.trim().toUpperCase();
+  if(!n){ showMsg('Subject ka naam lazmi hai.'); return; }
+  var s=loadStore();
+  if(editId){
+    s.subjects.find(function(x){return x.id===editId;}).name=n;
+    s.subjects.find(function(x){return x.id===editId;}).code=c;
+    showMsg('Subject updated ✔');
+  } else {
+    var newId=Math.max.apply(null,s.subjects.map(function(x){return x.id;}))+1;
+    s.subjects.push({id:newId,name:n,code:c});
+    showMsg('Subject "'+n+'" add ho gaya ✔');
+  }
+  saveStore(s); closeModal('addModal'); render();
+}
+function delSubject(id){
+  var s=loadStore(); var x=s.subjects.find(function(y){return y.id===id;});
+  if(!confirm('Subject "'+x.name+'" delete karein?')) return;
+  s.subjects=s.subjects.filter(function(y){return y.id!==id;});
+  saveStore(s); showMsg('Subject delete ho gaya ✔'); render();
+}
+</script>
+</body>
+</html>

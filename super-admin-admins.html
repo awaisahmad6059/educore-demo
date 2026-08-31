@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Admins &amp; Sub-Admins - EduCore Super Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div><h1>Admins &amp; Sub-Admins</h1><div class="sub">Admin accounts create karein, login credentials den, permissions set karein.</div></div>
+      <div class="user-chip" id="userchip"></div>
+    </div>
+    <div class="toolbar">
+      <button class="btn btn-primary" onclick="openAdd()">+ Add Admin</button>
+    </div>
+    <div class="panel">
+      <table class="tbl">
+        <thead><tr><th>Role</th><th>Name</th><th>Login (email / pass)</th><th>Permissions</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <button class="close-x" onclick="closeModal('addModal')">✕</button>
+    <h3 id="modalTitle">Add Admin</h3>
+    <div class="form-grid">
+      <div class="form-row"><label>Role</label><select id="a_role"><option>superadmin</option><option>admin</option></select></div>
+      <div class="form-row"><label>Status</label><select id="a_status"><option>active</option><option>inactive</option></select></div>
+    </div>
+    <div class="form-grid">
+      <div class="form-row"><label>Full Name</label><input id="a_name"/></div>
+      <div class="form-row"><label>Email (login ID)</label><input id="a_email"/></div>
+    </div>
+    <div class="form-grid">
+      <div class="form-row"><label>Password</label><input id="a_pass" value="admin123"/></div>
+      <div class="form-row"><label>Module Access</label><select id="a_mod"><option>All Modules</option><option>Students &amp; Teachers only</option><option>Fees &amp; Finance only</option><option>Exams &amp; Results only</option></select></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-outline" onclick="closeModal('addModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveAdmin()">Save Admin</button>
+    </div>
+  </div>
+</div>
+<div class="msg" id="msg"></div>
+<script src="app.js"></script>
+<script>
+var editId=null;
+(function(){ var u=guard('superadmin'); if(!u) return; document.getElementById('sidebar').innerHTML=buildSidebar('Admins / Sub-Admins','superadmin'); document.getElementById('userchip').innerHTML='<div class="ava">'+letterAvatar(u.email)+'</div><div><b>'+u.email+'</b><span>Super Admin</span></div>'; render(); })();
+function render(){
+  var s=loadStore(); var list=s.users.filter(function(x){return x.role==='superadmin'||x.role==='admin';});
+  var h='';
+  if(!list.length) h='<tr><td colspan="6" style="text-align:center;color:var(--slate);padding:24px">Koi admin nahi.</td></tr>';
+  list.forEach(function(x){
+    h+='<tr><td><span class="badge '+(x.role==='superadmin'?'green':'blue')+'">'+x.role+'</span></td><td><b>'+esc(x.name)+'</b></td><td>'+esc(x.email)+' / '+esc(x.pass)+'</td><td>'+(x.module||'All Modules')+'</td><td><span class="badge '+(x.active!==false?'green':'gray')+'">'+(x.active!==false?'active':'inactive')+'</span></td>'+
+    '<td><button class="btn btn-sm btn-outline" onclick="resetPass('+x.id+')">Reset Pass</button> '+
+    '<button class="btn btn-sm btn-outline" onclick="toggleStatus('+x.id+')">'+(x.active!==false?'Deactivate':'Activate')+'</button></td></tr>';
+  });
+  document.getElementById('tbody').innerHTML=h;
+}
+function openAdd(){ editId=null; document.getElementById('modalTitle').textContent='Add Admin'; document.getElementById('a_name').value=''; document.getElementById('a_email').value=''; document.getElementById('a_pass').value='admin123'; openModal('addModal'); }
+function saveAdmin(){
+  var n=document.getElementById('a_name').value.trim();
+  var em=document.getElementById('a_email').value.trim();
+  if(!n||!em){ showMsg('Name aur email lazmi hain.'); return; }
+  var s=loadStore();
+  var dup=s.users.find(function(x){return x.email.toLowerCase()===em.toLowerCase();});
+  if(dup){ showMsg('Yeh email already use ho raha hai.'); return; }
+  var newId=Math.max.apply(null,s.users.map(function(x){return x.id;}))+1;
+  s.users.push({id:newId,role:document.getElementById('a_role').value,name:n,email:em,pass:document.getElementById('a_pass').value||'admin123',active:document.getElementById('a_status').value==='active',module:document.getElementById('a_mod').value});
+  saveStore(s); showMsg('Admin "'+n+'" add ho gaya. Login: '+em+' ✔'); closeModal('addModal'); render();
+}
+function resetPass(id){
+  var s=loadStore(); var u=s.users.find(function(x){return x.id===id;});
+  var nu=prompt('Naya password for '+u.name+':'); if(!nu) return;
+  u.pass=nu; saveStore(s); showMsg('Password reset ✔'); render();
+}
+function toggleStatus(id){
+  var s=loadStore(); var u=s.users.find(function(x){return x.id===id;});
+  u.active=(u.active!==false?false:true); saveStore(s); render();
+}
+</script>
+</body>
+</html>

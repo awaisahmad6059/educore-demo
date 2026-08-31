@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Login - EduCore</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="auth">
+  <div class="auth-left">
+    <a href="index.html" class="brand"><span class="brand-icon">E</span>EduCore</a>
+    <h1>Welcome Back</h1>
+    <p>Sign in to your personalized dashboard. Choose your role — Super Admin, Admin, Teacher or Student.</p>
+    <div class="demo-box">
+      <b>Demo Login (frontend sirf):</b><br/>
+      Role select karein, phir seeded credentials se login karein.<br/>
+      <br/><b>Super Admin:</b> superadmin@educore.pk / admin123<br/>
+      <b>Admin:</b> admin@educore.pk / admin123<br/>
+      <b>Teacher:</b> ahmed@educore.pk / teacher123<br/>
+      <b>Student:</b> ahmed.raza@educore.pk / student123<br/>
+      <span style="opacity:.7">Note: Admin apne logon ki credentials deta hai (Student/Teacher par default password). Login ke baad password change ho sakta hai.</span>
+    </div>
+  </div>
+  <div class="auth-right">
+    <div class="auth-card">
+      <h2>Sign In</h2>
+      <p class="sub">Select your role and enter your credentials</p>
+      <div class="role-tabs" id="roleTabs">
+        <div class="role-tab active" data-role="superadmin" onclick="setRole('superadmin')"><span class="ico">👑</span><b>Super Admin</b></div>
+        <div class="role-tab" data-role="admin" onclick="setRole('admin')"><span class="ico">🛡️</span><b>Admin</b></div>
+        <div class="role-tab" data-role="teacher" onclick="setRole('teacher')"><span class="ico">👩‍🏫</span><b>Teacher</b></div>
+        <div class="role-tab" data-role="student" onclick="setRole('student')"><span class="ico">🎓</span><b>Student</b></div>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input id="email" type="email" placeholder="you@school.com" value="superadmin@educore.pk"/>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input id="pass" type="password" placeholder="••••••••" value="admin123"/>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="doLogin()">Sign In →</button>
+      <div class="err-msg" id="err"></div>
+      <div class="hint" id="hint">superadmin@educore.pk / admin123</div>
+      <div class="hint" style="opacity:.6">
+        Demo: seeded users se login. Admin student/teacher ko unke email + password deta hai &amp; login ke baad wo password change kar sakte hain.
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+let role='superadmin';
+var rLogins={
+  superadmin:{e:'superadmin@educore.pk',p:'admin123'},
+  admin:{e:'admin@educore.pk',p:'admin123'},
+  teacher:{e:'ahmed@educore.pk',p:'teacher123'},
+  student:{e:'ahmed.raza@educore.pk',p:'student123'}
+};
+function setRole(r){
+  role=r;
+  document.querySelectorAll('.role-tab').forEach(t=>t.classList.toggle('active',t.dataset.role===r));
+  document.getElementById('email').value=rLogins[r].e;
+  document.getElementById('pass').value=rLogins[r].p;
+  document.getElementById('hint').textContent=rLogins[r].e+' / '+rLogins[r].p;
+}
+function doLogin(){
+  var e=document.getElementById('email').value.trim();
+  var p=document.getElementById('pass').value.trim();
+  var err=document.getElementById('err');
+  if(!e||!p){ err.textContent='Please enter email and password.'; return; }
+  if(p.length<4){ err.textContent='Password must be at least 4 characters.'; return; }
+  // frontend demo: verify against seeded users store
+  var u=verifyLogin(e,p,role);
+  if(!u){ err.textContent='Invalid credentials for "'+role+'". Try: '+rLogins[role].e+' / '+rLogins[role].p; return; }
+  sessionStorage.setItem('educore_role',u.role);
+  sessionStorage.setItem('educore_email',u.email);
+  window.location.href=rolePage(u.role);
+}
+</script>
+<script src="app.js"></script>
+</body>
+</html>
