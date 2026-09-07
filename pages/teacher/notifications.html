@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Notifications - EduCore Teacher</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../assets/css/style.css"/>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div><h1>Notifications</h1><div class="sub">Notify parents of low attendance or send class announcements.</div></div>
+      <div class="user-chip" id="userchip"></div>
+    </div>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Compose</h3>
+        <div class="form-row"><label>Type</label><select id="n_type"><option>Class Announcement</option><option>Parent Alert (Attendance)</option><option>Assignment Reminder</option><option>Exam Update</option></select></div>
+        <div class="form-row"><label>Class</label><select id="n_cls"><option>Grade 8-A</option><option>Grade 9-B</option><option>Grade 10-A</option></select></div>
+        <div class="form-row"><label>Message</label><textarea id="n_msg" placeholder="Enter message..."></textarea></div>
+        <div class="form-actions"><button class="btn btn-primary" onclick="sendN()">Send</button></div>
+      </div>
+      <div class="panel">
+        <h3>My Sent</h3>
+        <table class="tbl" id="nTable"><tbody id="nBody"></tbody></table>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="msg" id="msg"></div>
+<script src="../../assets/js/app.js"></script>
+<script>
+var sent=[];
+(function(){ var u=guard('teacher'); if(!u) return; document.getElementById('sidebar').innerHTML=buildSidebar('Notifications','teacher'); document.getElementById('userchip').innerHTML='<div class="ava">'+letterAvatar(u.email)+'</div><div><b>'+u.email+'</b><span>Teacher</span></div>'; renderN(); })();
+function renderN(){ document.getElementById('nBody').innerHTML=sent.length?sent.map(function(x){return '<tr><td><b>'+x.t+'</b><br/><span style="color:var(--slate);font-size:12px">'+x.c+'</span></td></tr>';}).join(''):'<tr><td style="color:var(--slate);text-align:center">Koi notification nahi bheja abhi.</td></tr>'; }
+function sendN(){
+  var m=document.getElementById('n_msg').value.trim();
+  if(!m){ showMsg('Message likhein.'); return; }
+  sent.unshift({t:document.getElementById('n_type').value,c:document.getElementById('n_cls').value});
+  showMsg('Notification send ho gayi ✔'); document.getElementById('n_msg').value=''; renderN();
+}
+</script>
+</body>
+</html>

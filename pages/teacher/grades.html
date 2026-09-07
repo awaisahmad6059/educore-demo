@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Grades - EduCore Teacher</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../assets/css/style.css"/>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div><h1>Grade Management</h1><div class="sub">Enter marks for your exams. Results submit hone par Admin publish kar sakta hai.</div></div>
+      <div class="user-chip" id="userchip"></div>
+    </div>
+    <div class="toolbar">
+      <div class="form-row" style="margin:0"><label style="margin-bottom:4px">Exam</label><select id="exam" onchange="loadMarks()">
+        <option value="Midterm">Midterm Mathematics — Grade 8-A</option>
+        <option value="Algebra Quiz">Algebra Quiz — Grade 10-A</option>
+        <option value="Unit Test">Unit Test — Grade 9-B</option>
+      </select></div>
+    </div>
+    <div class="panel">
+      <h3>Enter Marks — <span id="examLabel">Midterm (Grade 8-A)</span></h3>
+      <table class="tbl">
+        <thead><tr><th>Roll</th><th>Student</th><th>Marks <span style="font-weight:400;color:var(--slate)">(out of 100)</span></th><th>Grade</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div class="form-actions" style="margin-top:16px">
+        <button class="btn btn-primary" onclick="saveGrades()">Submit Grades</button>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="msg" id="msg"></div>
+<script src="../../assets/js/app.js"></script>
+<script>
+var rows=[];
+function gradeOf(m){ return m>=90?'A+':m>=80?'A':m>=70?'B':m>=60?'C':m>=50?'D':'F'; }
+(function(){
+  var u=guard('teacher'); if(!u) return;
+  document.getElementById('sidebar').innerHTML=buildSidebar('Grades','teacher');
+  document.getElementById('userchip').innerHTML='<div class="ava">'+letterAvatar(u.email)+'</div><div><b>'+u.email+'</b><span>Teacher</span></div>';
+  loadMarks();
+})();
+function loadMarks(){
+  var e=document.getElementById('exam').value;
+  document.getElementById('examLabel').textContent=e;
+  var stu=loadStore().students.slice(0,5);
+  rows=stu.map(function(x){return {roll:x.roll,name:x.name,marks:x.id===2?0:(x.id===5?62:x.id===6?74:(x.id===3?88:75))};});
+  render();
+}
+function render(){
+  document.getElementById('tbody').innerHTML=rows.map(function(r,i){
+    var g=gradeOf(r.marks);
+    var badge=g==='F'?'red':(g==='A+'||g==='A'?'green':(g==='B'?'blue':'amber'));
+    return '<tr><td>'+r.roll+'</td><td><b>'+r.name+'</b></td><td><input type="number" min="0" max="100" value="'+r.marks+'" style="width:80px" onchange="row['+i+'].marks=+this.value; this.closest(\'tr\').querySelector(\'#g'+i+'\').textContent=\''+gradeOf(r.marks)+'\';"/></td><td><span class="badge '+badge+'" id="g'+i+'">'+g+'</span></td></tr>';
+  }).join('');
+}
+function saveGrades(){
+  rows.forEach(function(r){ if(!(r.marks>=0)) r.marks=0; });
+  var s=loadStore();
+  var e=s.exams.find(function(x){return x.status==='scheduled';});
+  if(e) e.status='result-pending';
+  saveStore(s);
+  showMsg('Grades submitted! Admin ko review ke liye bhej diye gaye ✔');
+}
+</script>
+</body>
+</html>

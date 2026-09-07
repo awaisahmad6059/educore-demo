@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>My Attendance - EduCore Student</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../assets/css/style.css"/>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div><h1>My Attendance</h1><div class="sub">Monthly view of your attendance — green days you were present.</div></div>
+      <div class="user-chip" id="userchip"></div>
+    </div>
+    <div class="grid-3">
+      <div class="kpi" style="padding:16px"><div class="k-num" style="font-size:24px;color:var(--success)">92%</div><div class="k-lbl">This Month</div></div>
+      <div class="kpi" style="padding:16px"><div class="k-num" style="font-size:24px;color:var(--primary)">23</div><div class="k-lbl">Days Present</div></div>
+      <div class="kpi" style="padding:16px"><div class="k-num" style="font-size:24px;color:var(--danger)">2</div><div class="k-lbl">Days Absent</div></div>
+    </div>
+    <div class="panel">
+      <h3>August 2026</h3>
+      <div class="cal-head">
+        <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+      </div>
+      <div class="cal" id="cal"></div>
+    </div>
+  </main>
+</div>
+<div class="msg" id="msg"></div>
+<script src="../../assets/js/app.js"></script>
+<script>
+(function(){
+  var u=guard('student'); if(!u) return;
+  document.getElementById('sidebar').innerHTML=buildSidebar('My Attendance','student');
+  document.getElementById('userchip').innerHTML='<div class="ava">'+letterAvatar(u.email)+'</div><div><b>'+u.email+'</b><span>Student</span></div>';
+  // present days demo
+  var present=[1,2,3,4,5,8,9,10,11,12,15,16,17,18,19,22,23,24,25,26,28,29];
+  var h=''; for(var d=1; d<=31; d++){
+    var cls=present[d]?'day p':'day a';
+    h+='<div class="'+cls+'">'+d+(present[d]?'<span>✓</span>':'<span>✗</span>')+'</div>';
+  }
+  document.getElementById('cal').innerHTML=h;
+})();
+</script>
+</body>
+</html>

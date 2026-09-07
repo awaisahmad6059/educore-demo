@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>System Settings - EduCore Super Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../assets/css/style.css"/>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div><h1>System Settings</h1><div class="sub">Email, SMTP, notifications, security aur app-level settings (backend ke liye).</div></div>
+      <div class="user-chip" id="userchip"></div>
+    </div>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>General</h3>
+        <div class="form-row"><label>Platform Name</label><input value="EduCore" onchange="showMsg('Saved (demo)')"/></div>
+        <div class="form-row"><label>Default Language</label><select><option>English</option><option>Urdu</option></select></div>
+        <div class="form-row"><label>Timezone</label><select><option>Asia/Karachi (GMT+5)</option><option>UTC</option><option>Europe/London</option></select></div>
+      </div>
+      <div class="panel">
+        <h3>Email / Notifications</h3>
+        <div class="form-row"><label>SMTP Host</label><input value="smtp.educore.pk"/></div>
+        <div class="form-row"><label>Mail From</label><input value="no-reply@educore.pk"/></div>
+        <div class="form-row"><label>Enable SMS Alerts</label><select><option>Yes</option><option>No</option></select></div>
+        <div class="form-row"><label>Enable Email Alerts</label><select><option>Yes</option><option>No</option></select></div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Security</h3>
+        <div class="form-row"><label>Session Timeout (min)</label><input type="number" value="30"/></div>
+        <div class="form-row"><label>Two-Factor Auth (Admin)</label><select><option>Enabled</option><option>Disabled</option></select></div>
+      </div>
+      <div class="panel">
+        <h3>Maintenance</h3>
+        <p style="color:var(--slate);font-size:14px">App version, server health, real backend ke liye settings yahan hoti hain.</p>
+        <table class="tbl">
+          <tr><td>Version</td><td style="text-align:right"><span class="badge blue">v1.0 (Demo)</span></td></tr>
+          <tr><td>Server</td><td style="text-align:right"><span class="badge blue">Frontend only</span></td></tr>
+        </table>
+        <div class="form-actions"><button class="btn btn-primary" onclick="showMsg('Settings saved (demo) — backend baad mein lagayenge.')">Save Settings</button></div>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="msg" id="msg"></div>
+<script src="../../assets/js/app.js"></script>
+<script>
+(function(){ var u=guard('superadmin'); if(!u) return; document.getElementById('sidebar').innerHTML=buildSidebar('System Settings','superadmin'); document.getElementById('userchip').innerHTML='<div class="ava">'+letterAvatar(u.email)+'</div><div><b>'+u.email+'</b><span>Super Admin</span></div>'; })();
+</script>
+</body>
+</html>

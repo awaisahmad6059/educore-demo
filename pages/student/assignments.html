@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>My Assignments - EduCore Student</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../assets/css/style.css"/>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div><h1>My Assignments</h1><div class="sub">Upcoming assignments upload karein. Teacher ko aap ki submission dikhegi.</div></div>
+      <div class="user-chip" id="userchip"></div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="k-ico" style="background:rgba(45,91,227,.12)">⏳</div><div class="k-num" id="k_pending">0</div><div class="k-lbl">Pending</div></div>
+      <div class="kpi"><div class="k-ico" style="background:rgba(22,163,74,.12)">✅</div><div class="k-num" id="k_sub">0</div><div class="k-lbl">Submitted</div></div>
+    </div>
+    <div class="panel">
+      <h3>Assignments</h3>
+      <table class="tbl">
+        <thead><tr><th>Title</th><th>Subject</th><th>Class</th><th>Due</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<div class="modal-overlay" id="subModal">
+  <div class="modal">
+    <div class="modal-head"><h3 id="subTitle">Submit Assignment</h3><button class="close-x" onclick="closeModal('subModal')">✕</button></div>
+    <div class="form-row"><label>Assignment</label><input id="subAssign" disabled/></div>
+    <div class="form-row"><label>Your Name</label><input id="subName" disabled/></div>
+    <div class="form-row"><label>Attachment (file)</label>
+      <div class="dropzone" onclick="document.getElementById('sub_file').click()" id="subDz">
+        <div style="font-size:26px">📎</div>
+        <div><b>Click to upload your file</b><br/><span style="font-size:12px;color:var(--slate)">PDF, DOCX, image, ZIP (max 20MB)</span></div>
+      </div>
+      <input type="file" id="sub_file" hidden onchange="subPick(this)"/>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-outline" onclick="closeModal('subModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveSubmission()">Submit Assignment</button>
+    </div>
+  </div>
+</div>
+<div class="msg" id="msg"></div>
+<script src="../../assets/js/app.js"></script>
+<script>
+var subFile='';
+var currentAssignId=null;
+(function(){
+  var u=guard('student'); if(!u) return;
+  document.getElementById('sidebar').innerHTML=buildSidebar('Assignments','student');
+  document.getElementById('userchip').innerHTML='<div class="ava">'+letterAvatar(u.email)+'</div><div><b>'+u.email+'</b><span>Student</span></div>';
+  render();
+})();
+function mySubmissions(){
+  var cu=getCurrentUser();
+  var subId=cu&&cu.studentId;
+  return loadStore().submissions.filter(function(x){ return subId?x.studentId===subId:x.student===(cu?cu.name:''); });
+}
+function render(){
+  var s=loadStore().assignments;
+  var subs=mySubmissions();
+  var byAssign={};
+  subs.forEach(function(sb){ byAssign[sb.assignId]=sb; });
+  var pending=0, done=0;
+  var h=s.map(function(x){
+    var mine=byAssign[x.id];
+    var status, action;
+    if(mine){ status='<span class="badge green">Submitted</span>'; action='<button class="btn btn-sm btn-outline" onclick="showMsg(\'Submitted file: '+esc(mine.file)+'\')">View</button>'; done++; }
+    else { status='<span class="badge amber">Pending</span>'; action='<button class="btn btn-sm btn-primary" onclick="openSub('+x.id+',\''+esc(x.title).replace(/'/g,"\\'")+'\')">Submit</button>'; pending++; }
+    return '<tr><td><b>'+esc(x.title)+'</b><br/><span style="color:var(--slate);font-size:11px">'+esc(x.teacher)+'</span></td><td>'+x.subject+'</td><td>'+x.class+'</td><td>'+x.due+'</td><td>'+status+'</td><td>'+action+'</td></tr>';
+  }).join('');
+  if(!h) h='<tr><td colspan="6" style="text-align:center;color:var(--slate);padding:24px">Koi assignment nahi.</td></tr>';
+  document.getElementById('tbody').innerHTML=h;
+  document.getElementById('k_pending').textContent=pending;
+  document.getElementById('k_sub').textContent=done;
+}
+function openSub(id,title){
+  currentAssignId=id;
+  subFile='';
+  document.getElementById('subTitle').textContent='Submit Assignment';
+  document.getElementById('subAssign').value=title;
+  var cu=getCurrentUser(); document.getElementById('subName').value=(cu&&cu.name)||'';
+  var dz=document.getElementById('subDz');
+  dz.style.borderColor=''; dz.lastElementChild.firstElementChild.textContent='Click to upload your file';
+  openModal('subModal');
+}
+function subPick(inp){
+  subFile=inp.files&&inp.files[0]?inp.files[0].name:'';
+  var dz=document.getElementById('subDz');
+  if(subFile){ dz.style.borderColor='var(--success)'; dz.lastElementChild.firstElementChild.textContent='Selected: '+subFile; }
+}
+function saveSubmission(){
+  if(!currentAssignId){ showMsg('Assignment select karein.'); return; }
+  if(!subFile){ showMsg('Pehle apni file upload karein.'); return; }
+  var cu=getCurrentUser();
+  var s=loadStore();
+  var assigns=s.assignments.find(function(x){return x.id===currentAssignId;});
+  var dup=s.submissions.some(function(x){ return x.assignId===currentAssignId && x.studentId===cu.studentId; });
+  if(dup){ showMsg('Aap is assignment pe pehle hi submit kar chuke hain.'); closeModal('subModal'); return; }
+  var newId=Math.max.apply(null,s.submissions.map(function(x){return x.id;}))+1;
+  s.submissions.push({id:newId,assignId:currentAssignId,student:(cu&&cu.name)||'Student',studentId:cu?cu.studentId:null,file:subFile,teacher:assigns?assigns.teacher:'',date:todayStr(),status:'submitted'});
+  saveStore(s);
+  showMsg('Assignment submit ho gayi! Teacher ko show ho gayi hai.');
+  closeModal('subModal'); render();
+}
+</script>
+</body>
+</html>

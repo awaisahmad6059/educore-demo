@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Teacher Dashboard - EduCore</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../assets/css/style.css"/>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar"></aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div><h1>Teacher Dashboard</h1><div class="sub">Welcome back, Ms. Ahmed — you have 3 classes today.</div></div>
+      <div class="user-chip" id="userchip"><div class="ava">MA</div><div><b>Ms. Ahmed</b><span>teacher@educore.pk</span></div></div>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><div class="k-ico" style="background:rgba(45,91,227,.12)">📅</div><div class="k-num">88%</div><div class="k-lbl">Today's Attendance</div><div class="k-delta up">▲ 2% vs yesterday</div></div>
+      <div class="kpi"><div class="k-ico" style="background:rgba(217,119,6,.12)">📚</div><div class="k-num">2</div><div class="k-lbl">Pending Assignments</div><div class="k-delta down">1 due today</div></div>
+      <div class="kpi"><div class="k-ico" style="background:rgba(22,163,74,.12)">📝</div><div class="k-num">3</div><div class="k-lbl">Upcoming Exams</div><div class="k-delta up">Next: Midterm</div></div>
+      <div class="kpi"><div class="k-ico" style="background:rgba(220,38,38,.12)">🔔</div><div class="k-num">2</div><div class="k-lbl">Low Attendance</div><div class="k-delta down">Students &lt;80%</div></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Today's Classes</h3>
+        <table class="tbl">
+          <tr><th>Class</th><th>Subject</th><th>Time</th><th>Status</th></tr>
+          <tr><td>Grade 8-A</td><td>Mathematics</td><td>8:00 - 9:00</td><td><span class="badge green">Marked</span></td></tr>
+          <tr><td>Grade 9-B</td><td>Mathematics</td><td>9:30 - 10:30</td><td><span class="badge amber">Pending</span></td></tr>
+          <tr><td>Grade 10-A</td><td>Algebra</td><td>11:00 - 12:00</td><td><span class="badge gray">Upcoming</span></td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <h3>Quick Attendance</h3>
+        <p style="color:var(--slate);font-size:14px;margin-bottom:18px;">Latest unmarked class:</p>
+        <div class="assign-card" style="border-color:var(--primary);">
+          <div class="file-ico">📅</div>
+          <div class="assign-info"><b>Grade 9-B · Mathematics</b><span>Mark attendance now — 38 students</span></div>
+          <button class="btn btn-primary btn-sm" onclick="showMsg('Attendance grid kholne ke liye backend ka data chahiye — demo me ye ek placeholder hai.')">Mark</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="panel">
+        <h3>Recent Assignments</h3>
+        <table class="tbl">
+          <tr><td>Algebra HW</td><td style="text-align:right"><span class="badge green">Active</span></td></tr>
+          <tr><td>Geometry</td><td style="text-align:right"><span class="badge amber">Due today</span></td></tr>
+          <tr><td>Calculus</td><td style="text-align:right"><span class="badge blue">Uploaded</span></td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <h3>Pending Results</h3>
+        <table class="tbl">
+          <tr><td>Midterm Math</td><td style="text-align:right"><span class="badge red">Pending</span></td></tr>
+          <tr><td>Algebra Quiz</td><td style="text-align:right"><span class="badge amber">Draft</span></td></tr>
+          <tr><td>Unit Test</td><td style="text-align:right"><span class="badge green">Done</span></td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <h3>Low Attendance Alerts</h3>
+        <table class="tbl">
+          <tr><td>Ali Hassan</td><td style="text-align:right"><span class="badge red">72%</span></td></tr>
+          <tr><td>Saad Khan</td><td style="text-align:right"><span class="badge red">68%</span></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>My Assignments</h3>
+      <table class="tbl">
+        <tr><th>Title</th><th>Class</th><th>Due Date</th><th>Format</th><th>Status</th></tr>
+        <tr><td>Algebra Homework #4</td><td>Grade 9-B</td><td>Aug 30</td><td>PDF</td><td><span class="badge green">Active</span></td></tr>
+        <tr><td>Geometry Practice</td><td>Grade 10-A</td><td>Sep 02</td><td>DOCX</td><td><span class="badge blue">Uploaded</span></td></tr>
+        <tr><td>Calculus Worksheet</td><td>Grade 9-B</td><td>Sep 05</td><td>PDF</td><td><span class="badge green">Active</span></td></tr>
+      </table>
+      <br/><a href="../../auth/login.html" class="btn btn-outline" style="margin-top:10px;">← Back to Login</a>
+    </div>
+  </main>
+</div>
+<div class="msg" id="msg"></div>
+<script src="../../assets/js/app.js"></script>
+<script>
+(function(){
+  var u=guard('teacher'); if(!u) return;
+  document.getElementById('sidebar').innerHTML=buildSidebar('Dashboard','teacher');
+  var cu=getCurrentUser();
+  document.getElementById('userchip').innerHTML='<div class="ava">'+letterAvatar((cu&&cu.name)||u.email)+'</div><div><b>'+esc((cu&&cu.name)||u.email)+'</b><span>'+esc(u.email)+'</span></div>';
+})();
+</script>
+</body>
+</html>

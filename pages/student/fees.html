@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Fee Status - EduCore Student</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../assets/css/style.css"/>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div><h1>Fee Status</h1><div class="sub">View your fee history and download receipts.</div></div>
+      <div class="user-chip" id="userchip"></div>
+    </div>
+    <div class="grid-3">
+      <div class="kpi" style="padding:16px"><div class="k-num" style="font-size:24px;color:var(--warning)">$250</div><div class="k-lbl">Due (Tuition)</div></div>
+      <div class="kpi" style="padding:16px"><div class="k-num" style="font-size:24px;color:var(--success)">$620</div><div class="k-lbl">Paid This Year</div></div>
+    </div>
+    <div class="panel">
+      <h3>Fee Records</h3>
+      <table class="tbl">
+        <thead><tr><th>Month</th><th>Type</th><th>Amount</th><th>Status</th><th>Receipt</th></tr></thead>
+        <tbody>
+          <tr><td>July 2026</td><td>Tuition</td><td>$250</td><td><span class="badge green">Paid</span></td><td><button class="btn btn-sm btn-outline" onclick="showMsg('Receipt: RCP-2026-48291 (PDF download real system mein).')">View</button></td></tr>
+          <tr><td>August 2026</td><td>Tuition</td><td>$250</td><td><span class="badge amber">Pending</span></td><td><button class="btn btn-sm btn-outline" onclick="showMsg('Pay online — demo me naheen, admin office mein karein.')">Pay Now</button></td></tr>
+          <tr><td>August 2026</td><td>Transport</td><td>$120</td><td><span class="badge amber">Pending</span></td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+<div class="msg" id="msg"></div>
+<script src="../../assets/js/app.js"></script>
+<script>
+(function(){ var u=guard('student'); if(!u) return; document.getElementById('sidebar').innerHTML=buildSidebar('Fee Status','student'); document.getElementById('userchip').innerHTML='<div class="ava">'+letterAvatar(u.email)+'</div><div><b>'+u.email+'</b><span>Student</span></div>'; })();
+</script>
+</body>
+</html>

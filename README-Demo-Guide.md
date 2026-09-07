@@ -28,15 +28,15 @@ Super Admin **sab se upar** hota hai. Admin ya teachers ko bana/control karta ha
 **Sidebar:** Overview · Admins/Sub-Admins · School Setup · Subjects · Backup & Restore · System Settings
 
 ### Pages aur kaam:
-- **Overview** (`super-admin.html`) — KPIs: kitne admins, students, teachers, subjects. Quick Actions + System Status (DB connected, last backup).
-- **Admins / Sub-Admins** (`super-admin-admins.html`) — 🔴 **Fully working**
+- **Overview** (`pages/super-admin/index.html`) — KPIs: kitne admins, students, teachers, subjects. Quick Actions + System Status (DB connected, last backup).
+- **Admins / Sub-Admins** (`pages/super-admin/admins.html`) — 🔴 **Fully working**
   - ➕ Add Admin (role: superadmin/admin, name, email, password, module access: All/Students/Fees/Exams)
   - Reset Password, Activate/Deactivate
   - Sab admins ki list with login credentials
-- **School Setup** (`super-admin-setup.html`) — School name, academic year, term, campuses, currency + grading system table (A+ to F). (Demo saved message)
-- **Subjects** (`super-admin-subjects.html`) — 🔴 Fully working: Add/Edit/Delete subjects + codes
-- **Backup & Restore** (`super-admin-backup.html`) — 🔴 Fully working: **Export pura data JSON file me** + **Import (restore)** backup file
-- **System Settings** (`super-admin-settings.html`) — General (platform name, language, timezone), Email/SMTP, Security (timeout, 2FA), Maintenance. (Backend settings — demo placeholder)
+- **School Setup** (`pages/super-admin/setup.html`) — School name, academic year, term, campuses, currency + grading system table (A+ to F). (Demo saved message)
+- **Subjects** (`pages/super-admin/subjects.html`) — 🔴 Fully working: Add/Edit/Delete subjects + codes
+- **Backup & Restore** (`pages/super-admin/backup.html`) — 🔴 Fully working: **Export pura data JSON file me** + **Import (restore)** backup file
+- **System Settings** (`pages/super-admin/settings.html`) — General (platform name, language, timezone), Email/SMTP, Security (timeout, 2FA), Maintenance. (Backend settings — demo placeholder)
 
 > Super Admin **Admin ke sare pages bhi access kar sakta hai** (role ke navigation me Admin Module link hai).
 
@@ -49,29 +49,29 @@ Admin **roz ka school management** karta hai — students, teachers, classes, fe
 **Sidebar:** Dashboard · Students · Teachers · Subjects · Classes · Attendance · Exams · Fees · Notifications · Audit Logs · Settings
 
 ### Pages aur kaam:
-- **Dashboard** (`admin.html`) — KPIs (total students, present, fees overdue, pending results), attendance trend chart, fee collection donut, class strength, pending fee table with "Collect" buttons.
-- **Students** (`admin-students.html`) — 🔴 Fully working (sabse complete)
+- **Dashboard** (`pages/admin/index.html`) — KPIs (total students, present, fees overdue, pending results), attendance trend chart, fee collection donut, class strength, pending fee table with "Collect" buttons.
+- **Students** (`pages/admin/students.html`) — 🔴 Fully working (sabse complete)
   - ➕ Add Student **4-step wizard** (Personal → Contact → Academic → Guardian), auto login account banta hai
   - Search + Active/All filter
   - View Profile, Reset Password, Activate/Deactivate
-- **Teachers** (`admin-teachers.html`) — 🔴 Fully working
+- **Teachers** (`pages/admin/teachers.html`) — 🔴 Fully working
   - ➕ Add Teacher (name, email, phone, password, subjects multi-select, classes multi-select, status)
   - Reset Password, list with login
-- **Subjects** (`admin-subjects.html`) — 🔴 Add/Edit/Delete subjects (teacher/class me use hote hain)
-- **Classes** (`admin-classes.html`) — Class cards (Grade + Section, in-charge teacher, students, subjects). ➕ Add Class (grade, section, year, capacity, in-charge teacher, subjects). (Fully working — classes local array me)
-- **Attendance** (`admin-attendance.html`) — Attendance report: date range + class filter, Overall/Present/Absent KPI, student-wise % summary table. Export button (demo placeholder).
-- **Exams** (`admin-exams.html`) — 🔴 Fully working
+- **Subjects** (`pages/admin/subjects.html`) — 🔴 Add/Edit/Delete subjects (teacher/class me use hote hain)
+- **Classes** (`pages/admin/classes.html`) — Class cards (Grade + Section, in-charge teacher, students, subjects). ➕ Add Class (grade, section, year, capacity, in-charge teacher, subjects). (Fully working — classes local array me)
+- **Attendance** (`pages/admin/attendance.html`) — Attendance report: date range + class filter, Overall/Present/Absent KPI, student-wise % summary table. Export button (demo placeholder).
+- **Exams** (`pages/admin/exams.html`) — 🔴 Fully working
   - ➕ Schedule Exam (type, class, subject, date, total/passing marks)
   - Exam list with status (scheduled/active/result-pending/published)
   - **Review & Publish Results** (teacher ke enter kiye marks review → publish)
-- **Fees** (`admin-fees.html`) — 🔴 Fully working
+- **Fees** (`pages/admin/fees.html`) — 🔴 Fully working
   - KPIs (collected/pending/overdue)
   - ➕ Record Payment → **Receipt generate hota hai**
   - Fee Structure (add/remove fee types grade-wise)
   - Pending/overdue table with "Collect" (prefill)
-- **Notifications** (`admin-notifications.html`) — Compose (title, message, type, recipients: students/parents/teachers/class) + history with read %. 🔴 Send works (in-app + email demo).
-- **Audit Logs** (`admin-audit.html`) — 🔴 Har admin action ka record: actor, action, resource, time, IP.
-- **Settings** (`admin-settings.html`) — School profile (name, year, term, contact) + Role management table.
+- **Notifications** (`pages/admin/notifications.html`) — Compose (title, message, type, recipients: students/parents/teachers/class) + history with read %. 🔴 Send works (in-app + email demo).
+- **Audit Logs** (`pages/admin/audit.html`) — 🔴 Har admin action ka record: actor, action, resource, time, IP.
+- **Settings** (`pages/admin/settings.html`) — School profile (name, year, term, contact) + Role management table.
 
 ---
 
@@ -82,23 +82,23 @@ Teacher **apne classes** ka attendance, assignments, grades aur performance mana
 **Sidebar:** Dashboard · Mark Attendance · Assignments · Grades · Notifications · Performance · Change Password
 
 ### Pages aur kaam:
-- **Dashboard** (`teacher.html`) — KPIs (attendance %, pending assignments, exams, low attendance), today's classes table, quick attendance card, recent assignments, pending results, my assignments.
-- **Mark Attendance** (`teacher-attendance.html`) — 🔴 Fully working
+- **Dashboard** (`pages/teacher/index.html`) — KPIs (attendance %, pending assignments, exams, low attendance), today's classes table, quick attendance card, recent assignments, pending results, my assignments.
+- **Mark Attendance** (`pages/teacher/attendance.html`) — 🔴 Fully working
   - Class + date select
   - Har student ke liye **P (Present) / A (Absent) / L (Late)** buttons
   - "All Present" / "All Absent" bulk shortcuts
   - Save → attendance record store me save hota hai
-- **Assignments** (`teacher-assignments.html`) — 🔴 Fully working (newest feature)
+- **Assignments** (`pages/teacher/assignments.html`) — 🔴 Fully working (newest feature)
   - ➕ Upload Assignment (title, class, subject, due date, file — PDF/DOCX/Image detect)
   - List with format badge (PDF/DOCX/Image)
   - **"N submitted"** button → expand karke dekh kon se student ne submit kiya (name + file + date) 🆕
-- **Grades** (`teacher-grades.html`) — 🔴 Fully working
+- **Grades** (`pages/teacher/grades.html`) — 🔴 Fully working
   - Exam select → har student ka marks enter
   - Auto grade calculate (A+, A, B, C, D, F)
   - Submit Grades → exam status "result-pending" (admin review/publish karega)
-- **Notifications** (`teacher-notifications.html`) — Compose (class announcement, parent alert, assignment reminder, exam update) + sent list. 🔴 Send works.
-- **Performance** (`teacher-performance.html`) — KPIs (avg score, attendance, assignments) + class averages + Good/Average/Needs attention.
-- **Change Password** (`teacher-change-password.html`) — 🔴 Old password verify karke naya password set (store me update).
+- **Notifications** (`pages/teacher/notifications.html`) — Compose (class announcement, parent alert, assignment reminder, exam update) + sent list. 🔴 Send works.
+- **Performance** (`pages/teacher/performance.html`) — KPIs (avg score, attendance, assignments) + class averages + Good/Average/Needs attention.
+- **Change Password** (`pages/teacher/change-password.html`) — 🔴 Old password verify karke naya password set (store me update).
 
 ---
 
@@ -109,17 +109,17 @@ Student **sirf apna** data dekh/sends hai — assignments submit karta hai, resu
 **Sidebar:** Dashboard · My Attendance · Assignments · Results · Report Card · Fee Status · Notifications · Change Password
 
 ### Pages aur kaam:
-- **Dashboard** (`student.html`) — KPIs (attendance, last grade, active assignments, fees outstanding), monthly attendance grid, recent assignments, result summary, fee status, notifications.
-- **My Attendance** (`student-attendance.html`) — Monthly calendar grid (green present ✓ / red absent ✗d) + KPIs.
-- **Assignments** (`student-assignments.html`) — 🔴 Fully working (newest feature)
+- **Dashboard** (`pages/student/index.html`) — KPIs (attendance, last grade, active assignments, fees outstanding), monthly attendance grid, recent assignments, result summary, fee status, notifications.
+- **My Attendance** (`pages/student/attendance.html`) — Monthly calendar grid (green present ✓ / red absent ✗d) + KPIs.
+- **Assignments** (`pages/student/assignments.html`) — 🔴 Fully working (newest feature)
   - Assignment list with **Pending / Submitted** status badges
   - ➕ **Submit** button → modal (assignment, apna naam, file attach)
   - Submit → store me saved → **teacher ko exact waqt dikh jata hai** 🆕
-- **Results** (`student-results.html`) — Overall %, class rank + subject-wise marks/grades table.
-- **Report Card** (`student-report.html`) — Official report card layout (school name, student info, marks, total, %, grade, rank) + Download PDF button (demo placeholder).
-- **Fee Status** (`student-fees.html`) — KPIs (due / paid) + fee records with receipt buttons.
-- **Notifications** (`student-notifications.html`) — 🔴 Store se notifications load (Result/Assignment/Exam/Fee types, Read/New badge).
-- **Change Password** (`student-change-password.html`) — 🔴 Same as teacher, apna password update.
+- **Results** (`pages/student/results.html`) — Overall %, class rank + subject-wise marks/grades table.
+- **Report Card** (`pages/student/report.html`) — Official report card layout (school name, student info, marks, total, %, grade, rank) + Download PDF button (demo placeholder).
+- **Fee Status** (`pages/student/fees.html`) — KPIs (due / paid) + fee records with receipt buttons.
+- **Notifications** (`pages/student/notifications.html`) — 🔴 Store se notifications load (Result/Assignment/Exam/Fee types, Read/New badge).
+- **Change Password** (`pages/student/change-password.html`) — 🔴 Same as teacher, apna password update.
 
 ---
 

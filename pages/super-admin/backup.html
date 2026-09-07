@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Backup &amp; Restore - EduCore Super Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../assets/css/style.css"/>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div><h1>Backup &amp; Restore</h1><div class="sub">Pura data export (backup) karein ya import (restore) karein. Demo mein export JSON file ke tor par download hota hai.</div></div>
+      <div class="user-chip" id="userchip"></div>
+    </div>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Backup (Export)</h3>
+        <p style="color:var(--slate);font-size:14px;margin-bottom:16px">Pura store (users, students, teachers, subjects, exams, fees...) JSON file mein download karein.</p>
+        <div class="form-actions"><button class="btn btn-primary" onclick="doBackup()">💾 Backup Now</button></div>
+      </div>
+      <div class="panel">
+        <h3>Restore (Import)</h3>
+        <p style="color:var(--slate);font-size:14px;margin-bottom:16px">Pehle se backup ki hui JSON file select kar ke restore karein.</p>
+        <div class="dropzone" onclick="document.getElementById('imp').click()">
+          <div style="font-size:26px">📂</div>
+          <div><b>Click to choose backup file</b><br/><span style="font-size:12px;color:var(--slate)">.json</span></div>
+        </div>
+        <input type="file" id="imp" hidden onchange="doRestore(this)"/>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Backup History</h3>
+      <table class="tbl">
+        <thead><tr><th>Date</th><th>Size</th><th>Type</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Today 3:00 AM</td><td>1.2 MB</td><td>Full</td><td><span class="badge green">Success</span></td></tr>
+          <tr><td>Yesterday 3:00 AM</td><td>1.1 MB</td><td>Full</td><td><span class="badge green">Success</span></td></tr>
+          <tr><td>Aug 27, 2026</td><td>1.0 MB</td><td>Full</td><td><span class="badge green">Success</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+<div class="msg" id="msg"></div>
+<script src="../../assets/js/app.js"></script>
+<script>
+(function(){ var u=guard('superadmin'); if(!u) return; document.getElementById('sidebar').innerHTML=buildSidebar('Backup & Restore','superadmin'); document.getElementById('userchip').innerHTML='<div class="ava">'+letterAvatar(u.email)+'</div><div><b>'+u.email+'</b><span>Super Admin</span></div>'; })();
+function doBackup(){
+  var data=JSON.stringify(loadStore(),null,2);
+  var blob=new Blob([data],{type:'application/json'});
+  var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='educore-backup-'+todayStr()+'.json'; a.click();
+  showMsg('Backup file download ho gayi ✔');
+}
+function doRestore(inp){
+  var f=inp.files&&inp.files[0]; if(!f) return;
+  var r=new FileReader();
+  r.onload=function(){ try{ var d=JSON.parse(r.result); localStorage.setItem(STORE_KEY,JSON.stringify(d)); showMsg('Restore successful! Data reload ho gaya ✔'); setTimeout(function(){ location.reload(); },1200); }catch(e){ showMsg('Invalid backup file: '+e.message); } };
+  r.readAsText(f);
+}
+</script>
+</body>
+</html>

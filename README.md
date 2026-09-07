@@ -41,50 +41,62 @@
 ```
 educore-demo/
 │
-├── index.html                      # Marketing landing page
-├── login.html                      # Login page (role tabs)
-├── style.css                       # Global styles (single stylesheet)
-├── app.js                          # Shared JS: store, auth, sidebar, helpers
+├── index.html                      # Marketing landing page (root)
 ├── vercel.json                     # Vercel static deployment config
+├── README.md                       # Main documentation
 ├── README-Demo-Guide.md            # Detailed demo walkthrough (Urdu/English)
 ├── Demo_Start.bat                  # Windows starter (opens index.html)
 ├── start.bat                       # Windows starter (alt)
 │
-├── super-admin.html                # 👑 Super Admin dashboard
-├── super-admin-admins.html         # Admins & Sub-Admins management
-├── super-admin-setup.html          # School setup (year, term, currency)
-├── super-admin-subjects.html       # Subjects management
-├── super-admin-backup.html         # Backup/Export & Restore/Import
-├── super-admin-settings.html       # System settings (SMTP, security)
+├── auth/                           # 🔐 Authentication
+│   └── login.html                  # Login page (role tabs)
 │
-├── admin.html                      # 🛡️ Admin dashboard
-├── admin-students.html             # Student admission + profiles
-├── admin-teachers.html             # Teacher management
-├── admin-classes.html              # Classes & Sections
-├── admin-subjects.html             # Subject management
-├── admin-attendance.html           # Attendance report
-├── admin-exams.html                # Exam scheduling + result publish
-├── admin-fees.html                 # Fee management (payments, receipts)
-├── admin-notifications.html        # Compose notifications
-├── admin-audit.html                # Audit logs
-├── admin-settings.html             # School profile & roles
+├── assets/                         # 🎨 Shared static assets
+│   ├── css/
+│   │   └── style.css               # Global styles (single stylesheet)
+│   └── js/
+│       └── app.js                  # Shared JS: store, auth, sidebar, helpers
 │
-├── teacher.html                    # 👩‍🏫 Teacher dashboard
-├── teacher-attendance.html         # Mark attendance (P/A/L)
-├── teacher-assignments.html        # Upload assignments + view submissions 🆕
-├── teacher-grades.html             # Enter marks, auto-grade, submit
-├── teacher-notifications.html      # Send class/parent notifications
-├── teacher-performance.html        # Class performance stats
-├── teacher-change-password.html    # Change password
-│
-└── student.html                    # 🎓 Student dashboard
-    ├── student-assignments.html    # View & submit assignments 🆕
-    ├── student-attendance.html     # Monthly attendance calendar
-    ├── student-results.html        # Exam results & rank
-    ├── student-report.html         # Official report card
-    ├── student-fees.html           # Fee status & receipts
-    ├── student-notifications.html  # Received notifications
-    └── student-change-password.html # Change password
+└── pages/                          # 📄 Role-based pages
+    ├── super-admin/                # 👑 Super Admin
+    │   ├── index.html              # Dashboard / Overview
+    │   ├── admins.html             # Admins & Sub-Admins management
+    │   ├── setup.html              # School setup (year, term, currency)
+    │   ├── subjects.html           # Subjects management
+    │   ├── backup.html             # Backup/Export & Restore/Import
+    │   └── settings.html           # System settings (SMTP, security)
+    │
+    ├── admin/                      # 🛡️ Admin
+    │   ├── index.html              # Dashboard
+    │   ├── students.html           # Student admission + profiles
+    │   ├── teachers.html           # Teacher management
+    │   ├── classes.html            # Classes & Sections
+    │   ├── subjects.html           # Subject management
+    │   ├── attendance.html         # Attendance report
+    │   ├── exams.html              # Exam scheduling + result publish
+    │   ├── fees.html               # Fee management (payments, receipts)
+    │   ├── notifications.html      # Compose notifications
+    │   ├── audit.html              # Audit logs
+    │   └── settings.html           # School profile & roles
+    │
+    ├── teacher/                    # 👩‍🏫 Teacher
+    │   ├── index.html              # Dashboard
+    │   ├── attendance.html         # Mark attendance (P/A/L)
+    │   ├── assignments.html        # Upload assignments + view submissions 🆕
+    │   ├── grades.html             # Enter marks, auto-grade, submit
+    │   ├── notifications.html      # Send class/parent notifications
+    │   ├── performance.html        # Class performance stats
+    │   └── change-password.html    # Change password
+    │
+    └── student/                    # 🎓 Student
+        ├── index.html              # Dashboard
+        ├── attendance.html         # Monthly attendance calendar
+        ├── assignments.html        # View & submit assignments 🆕
+        ├── results.html            # Exam results & rank
+        ├── report.html             # Official report card
+        ├── fees.html               # Fee status & receipts
+        ├── notifications.html      # Received notifications
+        └── change-password.html    # Change password
 ```
 
 ---

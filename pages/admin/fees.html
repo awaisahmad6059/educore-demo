@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Fees - EduCore Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../assets/css/style.css"/>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div><h1>Fee Management</h1><div class="sub">Fee structure set karein, payment collect karein aur receipt generate karein.</div></div>
+      <div class="user-chip" id="userchip"></div>
+    </div>
+
+    <div class="grid-3">
+      <div class="kpi" style="padding:16px"><div class="k-num" style="font-size:24px;color:var(--success)">$2.45M</div><div class="k-lbl">Collected</div></div>
+      <div class="kpi" style="padding:16px"><div class="k-num" style="font-size:24px;color:var(--warning)">$380K</div><div class="k-lbl">Pending</div></div>
+      <div class="kpi" style="padding:16px"><div class="k-num" style="font-size:24px;color:var(--danger)">$95K</div><div class="k-lbl">Overdue</div></div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn btn-primary" onclick="openPay()">+ Record Payment</button>
+      <button class="btn btn-outline" onclick="openStruct()">Fee Structure</button>
+    </div>
+
+    <div class="panel">
+      <h3>Pending / Overdue Fees</h3>
+      <table class="tbl">
+        <thead><tr><th>Student</th><th>Amount</th><th>Due Date</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody id="feeBody"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<div class="modal-overlay" id="payModal">
+  <div class="modal">
+    <div class="modal-head"><h3>Record Payment</h3><button class="close-x" onclick="closeModal('payModal')">✕</button></div>
+    <div class="form-row"><label>Student</label><select id="p_stu"></select></div>
+    <div class="form-grid">
+      <div class="form-row"><label>Fee Type</label><select id="p_type"><option>Tuition Fee</option><option>Transport</option><option>Exam Fee</option><option>Library</option></select></div>
+      <div class="form-row"><label>Amount</label><input type="number" id="p_amount" value="120"/></div>
+    </div>
+    <div class="form-grid">
+      <div class="form-row"><label>Payment Mode</label><select id="p_mode"><option>Cash</option><option>Bank Transfer</option><option>Cheque</option><option>Online</option></select></div>
+      <div class="form-row"><label>Month</label><input type="text" id="p_month" value="August 2026"/></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-outline" onclick="closeModal('payModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="recordPayment()">Save &amp; Generate Receipt</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="structModal">
+  <div class="modal">
+    <div class="modal-head"><h3>Fee Structure (Grade wise)</h3><button class="close-x" onclick="closeModal('structModal')">✕</button></div>
+    <table class="tbl" id="structBody">
+      <tr><th>Fee Type</th><th>Amount</th><th>Frequency</th><th></th></tr>
+    </table>
+    <div class="form-row"><label>Add Fee Type</label><div class="form-grid"><input id="sf_name" placeholder="Fee name"/><input id="sf_amt" placeholder="Amount" type="number"/></div></div>
+    <div class="form-actions">
+      <button class="btn btn-outline" onclick="addStructRow()">Add Row</button>
+      <button class="btn btn-primary" onclick="showMsg('Fee structure save ho gaya (demo).');closeModal('structModal')">Save &amp; Close</button>
+    </div>
+  </div>
+</div>
+<div class="msg" id="msg"></div>
+<script src="../../assets/js/app.js"></script>
+<script>
+var structRows=[];
+(function(){
+  var u=guard(['admin','superadmin']); if(!u) return;
+  document.getElementById('sidebar').innerHTML=buildSidebar('Fees','admin');
+  document.getElementById('userchip').innerHTML='<div class="ava">'+letterAvatar(u.email)+'</div><div><b>'+u.email+'</b><span>'+roleLabel(u.role)+'</span></div>';
+  var stuOpts=loadStore().students.map(function(s){return '<option>'+esc(s.name)+'</option>';}).join('');
+  document.getElementById('p_stu').innerHTML=stuOpts||'<option>-</option>';
+  renderFees();
+})();
+function renderFees(){
+  var s=loadStore().fees;
+  var cls={paid:'green',pending:'amber',overdue:'red'};
+  var h='';
+  s.forEach(function(x){
+    if(x.status==='paid') return;
+    h+='<tr><td>'+esc(x.student)+'</td><td>$'+x.amount+'</td><td>'+x.due+'</td><td><span class="badge '+(cls[x.status]||'amber')+'">'+esc(x.status)+'</span></td>'+
+    '<td><button class="btn btn-sm btn-primary" onclick="prefill(\''+esc(x.student)+'\','+x.amount+')">Collect</button></td></tr>';
+  });
+  if(!h) h='<tr><td colspan="5" style="text-align:center;color:var(--success);padding:24px">Sab fees paid hain.</td></tr>';
+  document.getElementById('feeBody').innerHTML=h;
+}
+function openPay(){ var s=loadStore(); var opt=s.students.map(function(x){return '<option>'+esc(x.name)+'</option>';}).join(''); if(opt) document.getElementById('p_stu').innerHTML=opt; openModal('payModal'); }
+function prefill(name,amt){ openPay(); document.getElementById('p_stu').value=name; document.getElementById('p_amount').value=amt; }
+function openStruct(){ renderStruct(); openModal('structModal'); }
+function renderStruct(){
+  var s=loadStore(); structRows=s.feeStruct||[
+    {name:'Tuition',amt:120},{name:'Transport',amt:40},{name:'Admission',amt:100},{name:'Library',amt:20},{name:'Exam',amt:15}
+  ];
+  var h=structRows.map(function(r,i){ return '<tr><td>'+esc(r.name)+'</td><td>$'+r.amt+'</td><td>Monthly</td><td><button class="btn btn-sm btn-outline" onclick="delStructRow('+i+')">Del</button></td></tr>';}).join('');
+  document.getElementById('structBody').innerHTML='<tr><th>Fee Type</th><th>Amount</th><th>Frequency</th><th></th></tr>'+h;
+}
+function addStructRow(){
+  var n=(document.getElementById('sf_name').value||'').trim();
+  var a=document.getElementById('sf_amt').value;
+  if(!n||!a){ showMsg('Fee name aur amount likhein.'); return; }
+  structRows.push({name:n,amt:parseInt(a)||0});
+  document.getElementById('sf_name').value=''; document.getElementById('sf_amt').value='';
+  var s=loadStore(); s.feeStruct=structRows.slice(); saveStore(s);
+  renderStruct();
+}
+function delStructRow(i){ structRows.splice(i,1); var s=loadStore(); s.feeStruct=structRows.slice(); saveStore(s); renderStruct(); }
+function recordPayment(){
+  var stu=document.getElementById('p_stu').value;
+  var amt=document.getElementById('p_amount').value;
+  if(!stu||!amt){ showMsg('Student aur amount select karein.'); return; }
+  var s=loadStore();
+  var paidRec={student:stu,amount:amt,status:'paid',due:todayStr(),receipt:'RCP-2026-'+(Math.floor(Math.random()*90000)+10000)};
+  s.fees.push(paidRec); saveStore(s);
+  showMsg('Payment recorded! Receipt: '+paidRec.receipt);
+  closeModal('payModal'); renderFees();
+}
+</script>
+</body>
+</html>
